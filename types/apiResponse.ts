@@ -1,4 +1,4 @@
-interface ApiResponse {
+type ApiResponse = {
   data: {
     type: string;
     id: string;
