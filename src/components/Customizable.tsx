@@ -7,9 +7,7 @@ Chart.register(...registerables);
 const generateRandomData = (count = 12) =>
   Array.from({ length: count }, () => Math.floor(Math.random() * 100));
 
-const euroMonthsData = generateRandomData();
-
-const Graph = () => (
+const Graph = ({ data }: { data: number[] }) => (
   <Bar
     data={{
       labels: [
@@ -29,7 +27,7 @@ const Graph = () => (
       datasets: [
         {
           label: "Euros",
-          data: euroMonthsData,
+          data,
           backgroundColor: [
             "rgba(255, 99, 132, 0.2)",
             "rgba(54, 162, 235, 0.2)",
@@ -79,15 +77,32 @@ const Graph = () => (
   />
 );
 
-function Customizable() {
+const ChartComponent = (
+  { title, data }: { title: string; data: number[] },
+) => (
+  <div className="w-[450px] h-[600px] rounded-lg p-8 text-center m-4">
+    <Graph data={data} />
+    <h1>{title}</h1>
+  </div>
+);
+
+function ChartsContainer() {
   return (
-    <section className="w-full flex items-center justify-center m-4">
-      <div className="w-[600px] h-[600px] rounded-lg p-8 text-center">
-        <Graph />
-        <h1>Example yearly spending report</h1>
-      </div>
-    </section>
+    <div className="flex items-center justify-center" id="example">
+      <ChartComponent
+        title="Household 1 - Madrid"
+        data={generateRandomData()}
+      />
+      <ChartComponent
+        title="Household 2 - Alicante"
+        data={generateRandomData()}
+      />
+      <ChartComponent
+        title="Household 3 - Barcelona"
+        data={generateRandomData()}
+      />
+    </div>
   );
 }
 
-export default Customizable;
+export default ChartsContainer;
