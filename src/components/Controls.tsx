@@ -1,12 +1,52 @@
+"use client";
+import { useUser } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
+
 export default function Controls() {
+  const { isSignedIn } = useUser();
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (count < 400) {
+        setCount((prevCount) => prevCount + 2);
+      }
+    }, 10);
+
+    return () => clearInterval(interval);
+  }, [count]);
+
+  const fontSize = 16 + (count / 400) * 80;
+  const grayValue = 400 - Math.min(count, 400);
+  const textColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+
   return (
-    <section id="login">
-      <div className="flex items-center justify-center gap-4 my-[60px]">
+    <section
+      id="login"
+      className="flex flex-col items-center justify-center"
+    >
+      <div
+        className="text-center font-bold transition-all duration-300 flex-flex-col"
+        style={{ color: textColor }}
+      >
+        <p style={{ fontSize }}>{count}+</p>
+        <p style={{ fontSize: fontSize / 4 }}>Households using our product</p>
+      </div>
+      <div
+        style={{ opacity: Math.floor((count / 400)) }}
+        className={`flex items-center justify-center gap-4 w-[900px] min-h-[150px] rounded-lg py-8`}
+      >
         <a
-          href="#"
-          className="text-center px-4 py-2 bg-white border-4 text-[#E54B48] font-bold border-[#E54B48] hover:bg-[#E54B48] hover:text-white rounded-md w-[180px]"
+          href="/home"
+          className={`text-center px-4 py-2 bg-white border-4 text-${
+            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
+          } font-bold border-${
+            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
+          } hover:bg-${
+            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
+          } hover:text-white rounded-md w-[180px]`}
         >
-          Log In
+          {isSignedIn ? "Launch" : "Log In"}
         </a>
         <a
           href="#faq"
