@@ -1,4 +1,3 @@
-import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import Onboard from "~/components/Onboard";
 
@@ -7,7 +6,6 @@ export default function Home() {
     <>
       <Header color="black" />
       <Onboard />
-      <Footer />
     </>
   );
 }

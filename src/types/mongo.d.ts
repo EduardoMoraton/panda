@@ -34,4 +34,19 @@ type UserSession = {
   };
 };
 
-export { Appliance, LogEntry, User, UserSession };
+export type Query = {
+  _id: string
+  email: string
+  appliances: Array<{
+    appliance: string
+    consumption_kwh: number
+    size: string
+    applianceId: string
+  }>
+  log: Array<any>
+  joinedAt: string
+  lastReportDate: any
+  reportFrequency: string
+}
+
+export { Appliance, LogEntry, User, UserSession, Query };

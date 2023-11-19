@@ -1,12 +1,17 @@
 "use client";
+import { Bar } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
 import { useEffect, useState } from "react";
-import { UserSession } from "~/types/mongo";
+import { Query, UserSession } from "~/types/mongo";
 import Spinner from "~/components/Spinner";
 import { appliances } from "~/utils/data";
 import { FaTrashCan } from "react-icons/fa6";
 import { FaChevronRight } from "react-icons/fa";
 
+Chart.register(...registerables);
+
 export default function Onboard() {
+  const [query, setQuery] = useState<Query>();
   const [user, setUser] = useState<UserSession | null>();
   const [result, setResult] = useState<boolean>(false);
   const [selected, setSelected] = useState<typeof appliances>([]);
@@ -22,7 +27,8 @@ export default function Onboard() {
     fetch(`/api/user?email=${user.sessionClaims.email}`, {
       credentials: "include",
     }).then(async (d) => d.ok ? (await (d.json())) : null).then((res) => {
-      setResult(res.data.document)
+      setQuery(res.data.document);
+      setResult(res.data.document);
     });
   }, [user]);
 
@@ -42,7 +48,6 @@ export default function Onboard() {
     })[size];
 
   const handleSubmit = () => {
-    // save to database
     fetch("/api/new", {
       body: JSON.stringify({
         email: user?.sessionClaims.email!,
@@ -50,15 +55,54 @@ export default function Onboard() {
       }),
       method: "post",
       credentials: "include",
-    }).then(async (d) => ({ data: await d.json(), ok: d.ok })).then(({ data, ok }) => {
-      if (!ok) console.error({ data });
-      setResult(true);
-    });
+    }).then(async (d) => ({ data: await d.json(), ok: d.ok })).then(
+      ({ data, ok }) => {
+        if (!ok) console.error({ data });
+        setResult(true);
+      },
+    );
   };
 
   if (!user) {
     return <Spinner />;
   }
+
+  const ChartComponent = ({ data }: { data: Query }) => {
+    const applianceNames = data.appliances.map((appliance) =>
+      appliance.appliance
+    );
+    const consumptionValues = data.appliances.map((appliance) =>
+      appliance.consumption_kwh
+    );
+
+    const chartData = {
+      labels: applianceNames,
+      datasets: [
+        {
+          label: "Consumption (kWh)",
+          data: consumptionValues,
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const chartOptions = {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    };
+
+    return (
+      <div className="w-full max-w-lg flex items-center justify-center flex-col">
+        <h2>Total Consumption per Appliance</h2>
+        <Bar data={chartData} options={chartOptions} />
+      </div>
+    );
+  };
 
   return (!result
     ? (
@@ -116,5 +160,19 @@ export default function Onboard() {
         </div>
       </section>
     )
-    : <h1>Implement dashboard here</h1>);
+    : (
+      <section className="flex items-center flex-col justify-center w-full gap-2 my-5">
+        <ChartComponent data={query!} />
+        {query?.appliances.map((app) => (
+          <div className="w-full max-w-lg bg-white border-2 border-gray-400 h-16 rounded-md flex items-center">
+            <p className="ml-4">
+              Consumed{" "}
+              <span className="font-semibold">{app.consumption_kwh}</span>{" "}
+              kwh by using the <span>{app.appliance}</span> for{" "}
+              {Math.floor(Math.random() * 59)} minutes
+            </p>
+          </div>
+        ))}
+      </section>
+    ));
 }
