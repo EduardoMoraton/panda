@@ -19,6 +19,8 @@ export default function Controls() {
   const fontSize = 16 + (count / 400) * 80;
   const grayValue = 400 - Math.min(count, 400);
   const textColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+  const logged = `text-[#7DAFCE] border-[#7DAFCE] hover:bg-[#7DAFCE]`;
+  const guest = `text-[#32a852] border-[#32a852] hover:bg-[#32a852]`;
 
   return (
     <section
@@ -33,18 +35,14 @@ export default function Controls() {
         <p style={{ fontSize: fontSize / 4 }}>Households using our product</p>
       </div>
       <div
-        style={{ opacity: Math.floor((count / 400)) }}
+        style={{ opacity: Math.floor(count / 400) }}
         className={`flex items-center justify-center gap-4 w-[900px] min-h-[150px] rounded-lg py-8`}
       >
         <a
           href="/home"
-          className={`text-center px-4 py-2 bg-white border-4 text-${
-            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
-          } font-bold border-${
-            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
-          } hover:bg-${
-            isSignedIn ? "[#7DAFCE]" : "[#32a852]"
-          } hover:text-white rounded-md w-[180px]`}
+          className={`text-center px-4 py-2 bg-white border-4 font-bold hover:text-white rounded-md w-[180px] ${
+            isSignedIn ? logged : guest
+          }`}
         >
           {isSignedIn ? "Launch" : "Log In"}
         </a>
