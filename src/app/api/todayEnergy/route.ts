@@ -13,6 +13,30 @@ import { NextRequest } from 'next/server';
 import { transformApiResponse } from '~/utils/transformFromApiResponse';
 import { json } from 'stream/consumers';
 
+
+
+
+import { sendReport } from '~/utils/mailService'
+
+interface ApplianceEntry {
+  appliance: string;
+  consumption_kwh: number;
+  size: string;
+}
+
+const dataArray: ApplianceEntry[] = [
+  { appliance: 'Coffee Maker', consumption_kwh: 1, size: 'small' },
+  { appliance: 'Dryer', consumption_kwh: 3.3, size: 'big' },
+  { appliance: 'Toaster', consumption_kwh: 0.7, size: 'small' },
+  { appliance: 'Oven', consumption_kwh: 2, size: 'big' },
+  { appliance: 'Oven', consumption_kwh: 2, size: 'big' },
+  { appliance: 'Heater', consumption_kwh: 1.8, size: 'big' },
+  { appliance: 'Ceiling Fan', consumption_kwh: 0.05, size: 'medium' }
+];
+
+
+
+
 export async function GET(
   req: NextRequest,
   res: NextApiResponse
@@ -23,6 +47,8 @@ export async function GET(
     const query_end = req.nextUrl.searchParams.get('end_date')
     let now: Date
     let end: Date
+
+    sendReport("moraton.eduardo@gmail.com", "aaa", dataArray)
 
     if (query_start === null || query_end === null) {
       now = new Date();
