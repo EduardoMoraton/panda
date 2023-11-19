@@ -16,35 +16,22 @@ export async function GET(
   req: NextRequest,
   res: NextApiResponse
 ): Promise<Response> {
-
-  const province =  req.nextUrl.searchParams.get('province') as string
-
   try {
     
     const now = new Date();
-    console.log(now)
+    const end = new Date()
+
     now.setHours(1,0,0,0)
-    console.log(now)
+    end.setHours(24,0,0,0)
+
     const start_date = now.toISOString().slice(0, 16);
-    const end_date = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
+    const end_date = end.toISOString().slice(0, 16);
+    
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    const geo_limit = userTimeZone === "WET" ? GeoLimit.CANARIAS : GeoLimit.PENINSULAR
+    const geo_id = userTimeZone === "WET" ? GeoId.CANARIAS : GeoId.PENINSULAR
 
-    const geo_limit_key = Object.keys(GeoLimit).find(
-      (key): key is keyof typeof GeoLimit =>
-        key.toUpperCase() === province.toUpperCase().replace(/ /g, '_')
-    );
-    const geo_limit = geo_limit_key ? GeoLimit[geo_limit_key] : null;
-
-
-    const geo_id_key = Object.keys(GeoId).find(
-      (key): key is keyof typeof GeoId =>
-        key.toUpperCase() === province.toUpperCase().replace(/ /g, '_')
-    );
-    const geo_id = geo_id_key ? GeoId[geo_id_key] : null;
-
-    console.log(geo_limit)
-    console.log(geo_id)
-    console.log(start_date)
-    console.log(end_date)
     
     const response: AxiosResponse = await axios.get(
       `${API_BASE_URL}${API_ENDPOINT}`,
@@ -61,7 +48,6 @@ export async function GET(
     );
 
     
-
     if (response.status === 200) {
       return new Response(JSON.stringify(response.data), {status:200, headers:[["content-type","application/json"]]});
     } else {
