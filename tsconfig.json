@@ -22,6 +22,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/todayEnergyPeninsula/route.ts", "src/app/api/hello/route.ts", "emails/infoEmail.tsx"],
   "exclude": ["node_modules"]
 }
