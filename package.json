@@ -10,6 +10,11 @@
     "preview-email": "email dev"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.27.1",
+    "@gmmurray/mongodb-atlas-data-api": "^1.1.0",
+    "chart.js": "^4.4.0",
+    "next": "14.0.3",
+
     "@react-email/container": "0.0.10",
     "@react-email/html": "0.0.6",
     "@react-email/section": "0.0.10",
@@ -18,7 +23,12 @@
     "next": "14.0.3",
     "nodemailer": "^6.9.7",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
+
+    "react-faq-component": "^1.3.4",
+    "react-icons": "^4.12.0",
+    "stripe-gradient": "^1.0.1"
     "react-email": "1.9.5",
     "superagent": "^8.1.2"
   },
