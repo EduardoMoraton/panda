@@ -1,5 +1,3 @@
-// pages/api/yourApiRoute.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import {
@@ -10,16 +8,29 @@ import {
   GeoId,
   GeoLimit,
 } from '../../../../types/apiConfig'; 
+import { NextRequest } from 'next/server';
 
 export async function GET(
-  req: NextApiRequest,
+  req: NextRequest,
   res: NextApiResponse
 ): Promise<Response> {
   try {
+    
     const now = new Date();
-    const start_date = now.toISOString().slice(0, 16);
-    const end_date = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
+    const end = new Date()
 
+    now.setHours(1,0,0,0)
+    end.setHours(24,0,0,0)
+
+    const start_date = now.toISOString().slice(0, 16);
+    const end_date = end.toISOString().slice(0, 16);
+    
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    const geo_limit = userTimeZone === "WET" ? GeoLimit.CANARIAS : GeoLimit.PENINSULAR
+    const geo_id = userTimeZone === "WET" ? GeoId.CANARIAS : GeoId.PENINSULAR
+
+    
     const response: AxiosResponse = await axios.get(
       `${API_BASE_URL}${API_ENDPOINT}`,
       {
@@ -28,12 +39,13 @@ export async function GET(
           end_date: end_date,
           time_trunc: TIME_TRUNC,
           geo_trunc: GEO_TRUNC,
-          geo_limit: GeoLimit.PENINSULAR,
-          geo_ids: GeoId.PENINSULAR,
+          geo_limit: geo_limit,
+          geo_ids: geo_id
         },
       }
     );
 
+    
     if (response.status === 200) {
       return new Response(JSON.stringify(response.data), {status:200, headers:[["content-type","application/json"]]});
     } else {
