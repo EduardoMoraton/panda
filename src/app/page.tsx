@@ -9,7 +9,7 @@ import Questions from "~/components/Questions";
 export default function Home() {
   return (
     <>
-      <Header />
+      <Header color="white" />
       <Hero />
       <Controls />
       <Customizable />

@@ -2,9 +2,9 @@
 
 import { UserButton } from "@clerk/clerk-react";
 
-function Header() {
+function Header({ color }: { color: string }) {
   return (
-    <header className="bg-opacity-10 backdrop-blur-lg bg-gray-200 text-white py-6 px-4 top-0">
+    <header className={`bg-opacity-10 backdrop-blur-lg bg-gray-200 text-${color} py-6 px-4 top-0`}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <a href="/">
