@@ -1,5 +1,3 @@
-// pages/api/yourApiRoute.ts
-
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import {
